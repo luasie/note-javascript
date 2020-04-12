@@ -52,7 +52,9 @@ JavaScrip 中访问它们
 * `document.implementation`  
 DOM1 级只为 document.implementation 规定了一个方法，即 hasFeature()。这个方
 法接受两个参数：要检测的 DOM 功能的名称及版本号。如果浏览器支持给定名称和版本的功能，则该方法返回 true，如下面的例子所示：  
-`var hasXmlDom = document.implementation.hasFeature("XML", "1.0");`
+```
+var hasXmlDom = document.implementation.hasFeature("XML", "1.0");
+```
 
 ## 操作节点
 
@@ -113,12 +115,13 @@ DOM1 级只为 document.implementation 规定了一个方法，即 hasFeature()�
 * `nodeType` 的值为 3；  
 * `nodeName` 的值为`"#text"`；  
 * `nodeValue` 的值为节点所包含的文本；
-* `parentNode` 是一个 `Element；`  不支持（没有）子节点。
+* `parentNode` 是一个 `Element`； 
+* 不支持（没有）子节点。
 
 可以通过`nodeValue`、`data`属性访问节点中包含的文本。  
 
   可以通过一下代码来访问文本子节点：  
-  ```
+  ```js
   var textNode = div.firstChild; // 获者div.childNodes[0]
   ```
 
@@ -148,17 +151,17 @@ DOM1 级只为 document.implementation 规定了一个方法，即 hasFeature()�
 * `nodeType` 的值为 8；  
 * `nodeName` 的值为`"#comment"`；  
 * `nodeValue` 的值是注释的内容；
-* `parentNode` 可能是 `Document` 或 `Element；`   
+* `parentNode` 可能是 `Document` 或 `Element`；   
 * 不支持（没有）子节点。  
 
 Comment 类型与 Text 类型继承自相同的基类，因此它拥有除 splitText()之外的所有字符串操作方法。与 Text 类型相似，也可以通过 nodeValue 或 data 属性来取得注释的内容。  
 
 注释节点可以通过其父节点来访问，以下面的代码为例。
-```
+```html
   <div id="myDiv"><!--A comment --></div> 
 ```
 在此，注释节点是`<div>`元素的一个子节点，因此可以通过下面的代码来访问它。
-```
+```js
 var div = document.getElementById("myDiv"); 
 var comment = div.firstChild; 
 alert(comment.data); //"A comment"
@@ -167,3 +170,87 @@ alert(comment.data); //"A comment"
 **创建注释节点**  
 
 `document.createComment`
+
+## CDATASection类型
+
+CDATASection 类型只针对基于 XML 的文档，表示的是 CDATA 区域。与 Comment 类似，CDATASection 类型继承自 Text 类型，因此拥有除 splitText()之外的所有字符串操作方法。CDATASection 节点具有下列特征：  
+
+* `nodeType` 的值为 4； 
+* `nodeName` 的值为`"#cdata-section"`； 
+* `nodeValue` 的值是 CDATA 区域中的内容；
+* `parentNode` 可能是 `Document` 或 `Element`； 
+* 不支持（没有）子节点。
+
+## DocumentType类型
+
+DocumentType 类型在 Web 浏览器中并不常用，仅有 Firefox、Safari、Opera 还有 Chrome4.0 支持它。Type 包含着与文档的 doctype 有关的所有信息，它具有下列特征：  
+
+* `nodeType` 的值为 10； 
+* `nodeName` 的值为 `doctype` 的名称；
+* `nodeValue` 的值为 `null`； 
+* `parentNode` 是 `Document`； 
+* 不支持（没有）子节点。  
+
+DOM1 级中，DocumentType 对象不能动态创建，而只能通过解析文档代码的方式来创建。支
+持它的浏览器会把 DocumentType 对象保存在 document.doctype 中 。  
+
+**属性**
+
+* `name` 表示文档类型的名称。  
+
+* `entities` 是由文档类型描述的实体的 NamedNodeMap 对象。  
+
+* `notations` 是由文档类型描述的符号的NamedNodeMap 对象。  
+
+## DocumentFragment类型
+
+创建文档片段，可以保存创建的文档节点，在一次性添加到文档中。DocumentFragment 节点具有下列特征：  
+
+* `nodeType` 的值为 11； 
+* `nodeName` 的值为`"#document-fragment"`； 
+* `nodeValue` 的值为 `null`； 
+* `parentNode` 的值为 `null`；  
+
+**创建 fragment**
+
+`document.createDocumentFragment`  
+
+**用法**  
+
+```js
+var fragment = document.createDocumentFragment(); 
+var ul = document.getElementById("myList"); 
+var li = null; 
+for (var i=0; i < 3; i++){ 
+ li = document.createElement("li"); 
+ li.appendChild(document.createTextNode("Item " + (i+1))); 
+ fragment.appendChild(li); 
+} 
+ul.appendChild(fragment);
+```  
+
+## Attr类型
+
+具有一下特征： 
+
+* `nodeType` 的值为 2； 
+* `nodeName` 的值是特性的名称；
+* `nodeValue` 的值是特性的值；
+* `parentNode` 的值为 `null`；  
+
+**属性：**  
+
+* `name` 名称（与 nodeName 的值相同）。
+* `value` 值（与 nodeValue 的值相同）。
+* `specified` 是一个布尔值，用以区别特性是在代码中指定的，还是默认的。  
+
+**示例：**  
+
+```js
+var attr = document.createAttribute("align"); 
+attr.value = "left"; 
+element.setAttributeNode(attr); 
+alert(element.attributes["align"].value); //"left" 
+alert(element.getAttributeNode("align").value); //"left" 
+alert(element.getAttribute("align")); //"left"
+```
