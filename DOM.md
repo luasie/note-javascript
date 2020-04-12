@@ -108,6 +108,13 @@ DOM1 级只为 document.implementation 规定了一个方法，即 hasFeature()�
 空文本节点，则删除它；如果找到相邻的文本节点，则将它们合并为一个文本节点。
 
 ## Text类型
+
+文本节点由 Text 类型表示，包含的是可以照字面解释的纯文本内容。纯文本中可以包含转义后的HTML 字符，但不能包含 HTML 代码。Text 节点具有以下特征：
+* `nodeType` 的值为 3；  
+* `nodeName` 的值为`"#text"`；  
+* `nodeValue` 的值为节点所包含的文本；
+* `parentNode` 是一个 `Element；`  不支持（没有）子节点。
+
 可以通过`nodeValue`、`data`属性访问节点中包含的文本。  
 
   可以通过一下代码来访问文本子节点：  
@@ -134,3 +141,29 @@ DOM1 级只为 document.implementation 规定了一个方法，即 hasFeature()�
   `document.createTextNode`   
   
   需要把新节点插到文档树中以存在的节点中，才能看到
+
+## Comment类型
+
+注释在 DOM 中是通过 Comment 类型来表示的。Comment 节点具有下列特征：
+* `nodeType` 的值为 8；  
+* `nodeName` 的值为`"#comment"`；  
+* `nodeValue` 的值是注释的内容；
+* `parentNode` 可能是 `Document` 或 `Element；`   
+* 不支持（没有）子节点。  
+
+Comment 类型与 Text 类型继承自相同的基类，因此它拥有除 splitText()之外的所有字符串操作方法。与 Text 类型相似，也可以通过 nodeValue 或 data 属性来取得注释的内容。  
+
+注释节点可以通过其父节点来访问，以下面的代码为例。
+```
+  <div id="myDiv"><!--A comment --></div> 
+```
+在此，注释节点是`<div>`元素的一个子节点，因此可以通过下面的代码来访问它。
+```
+var div = document.getElementById("myDiv"); 
+var comment = div.firstChild; 
+alert(comment.data); //"A comment"
+```  
+
+**创建注释节点**  
+
+`document.createComment`
